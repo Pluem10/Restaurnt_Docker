@@ -3,9 +3,9 @@ import NavBar from "../components/NavBar";
 
 export const Add = () => {
   const [restaurant, setRestaurants] = useState({
-    title: "",
+    name: "",
     type: "",
-    img: "",
+    imageUrl: "",
   });
 
   const handleChange = (e) => {
@@ -15,7 +15,7 @@ export const Add = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/restaurants", {
+      const response = await fetch("http://localhost:5000/api/v1/restaurant", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,9 +25,9 @@ export const Add = () => {
       if (response.ok) {
         alert("Restaurant added successfully !!");
         setRestaurants({
-          title: "",
+          name: "",
           type: "",
-          img: "",
+          imageUrl: "",
         });
       } else {
         alert("Failed to add restaurant.");
@@ -49,10 +49,10 @@ export const Add = () => {
           Name :
           <input
             type="text"
-            name="title"
+            name="name"
             className="grow"
             placeholder="Add Name"
-            value={restaurant.title}
+            value={restaurant.name}
             onChange={handleChange}
           />
         </label>
@@ -71,16 +71,16 @@ export const Add = () => {
           Img :
           <input
             type="text"
-            name="img"
+            name="imageUrl"
             className="grow"
             placeholder="Add img"
-            value={restaurant.img}
+            value={restaurant.imageUrl}
             onChange={handleChange}
           />
         </label>
-        {restaurant.img && (
+        {restaurant.imageUrl && (
           <div className="flex items-center gap-2">
-            <img className="h-32" src={restaurant.img} alt="Preview" />
+            <img className="h-32" src={restaurant.imageUrl} alt="Preview" />
           </div>
         )}
       </div>
@@ -92,9 +92,9 @@ export const Add = () => {
           className="btn btn-soft btn-error "
           onClick={() =>
             setRestaurants({
-              title: "",
+              name: "",
               type: "",
-              img: "",
+              imageUrl: "",
             })
           }
         >

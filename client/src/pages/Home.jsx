@@ -21,7 +21,7 @@ const Home = () => {
   };
   useEffect(() => {
     // call api : getAllRestaurants เรียก API
-    fetch("http://localhost:3000/restaurants")
+    fetch("http://localhost:5000/restaurants")
       .then((res) => {
         // convert เเปลงเป็น Json
         return res.json();

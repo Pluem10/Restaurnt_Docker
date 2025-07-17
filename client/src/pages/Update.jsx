@@ -11,7 +11,7 @@ const Update = () => {
   });
   //2. get restaurant by id
   useEffect(() => {
-    fetch("http://localhost:3000/restaurants/" + id)
+    fetch("http://localhost:5000/restaurants/" + id)
       .then((res) => {
         return res.json();
       })
@@ -29,7 +29,7 @@ const Update = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/restaurants/" + id, {
+      const response = await fetch("http://localhost:5000/restaurants/" + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

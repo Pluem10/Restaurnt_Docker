@@ -5,21 +5,29 @@ const Update = () => {
   //1. get id from URL
   const { id } = useParams();
   const [restaurant, setRestaurants] = useState({
-    title: "",
+    name: "",
     type: "",
-    img: "",
+    imageUrl: "",
   });
   //2. get restaurant by id
   useEffect(() => {
-    fetch("http://localhost:5000/restaurants/" + id)
+    fetch("http://localhost:5000/api/v1/restaurant/" + id)
       .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch restaurant");
         return res.json();
       })
       .then((response) => {
-        setRestaurants(response);
+        if (response && response.name) {
+          setRestaurants(response);
+        } else if (response && response.data) {
+          setRestaurants(response.data);
+        } else {
+          setRestaurants({ name: "", type: "", imageUrl: "" });
+        }
       })
       .catch((err) => {
         console.log(err.message);
+        setRestaurants({ name: "", type: "", imageUrl: "" });
       });
   }, [id]);
   const handleChange = (e) => {
@@ -29,22 +37,25 @@ const Update = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/restaurants/" + id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(restaurant),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/v1/restaurant/" + id,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(restaurant),
+        }
+      );
       if (response.ok) {
-        alert("Restaurant added successfully !!");
+        alert("Restaurant updated successfully !!");
         setRestaurants({
-          title: "",
+          name: "",
           type: "",
-          img: "",
+          imageUrl: "",
         });
       } else {
-        alert("Failed to add restaurant.");
+        alert("Failed to update restaurant.");
       }
     } catch (error) {
       console.log(error);
@@ -63,10 +74,10 @@ const Update = () => {
           Name :
           <input
             type="text"
-            name="title"
+            name="name"
             className="grow"
             placeholder="Add Name"
-            value={restaurant.title}
+            value={restaurant.name}
             onChange={handleChange}
           />
         </label>
@@ -85,16 +96,16 @@ const Update = () => {
           Img :
           <input
             type="text"
-            name="img"
+            name="imageUrl"
             className="grow"
             placeholder="Add img"
-            value={restaurant.img}
+            value={restaurant.imageUrl}
             onChange={handleChange}
           />
         </label>
-        {restaurant.img && (
+        {restaurant.imageUrl && (
           <div className="flex items-center gap-2">
-            <img className="h-32" src={restaurant.img} alt="Preview" />
+            <img className="h-32" src={restaurant.imageUrl} alt="Preview" />
           </div>
         )}
       </div>
@@ -109,9 +120,9 @@ const Update = () => {
           className="btn btn-secondary justify-self-center justify-center  text-1xl text-center m-2 gap-x-5 space-x-5"
           onClick={() =>
             setRestaurants({
-              title: "",
+              name: "",
               type: "",
-              img: "",
+              imageUrl: "",
             })
           }
         >

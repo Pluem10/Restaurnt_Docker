@@ -8,11 +8,12 @@ const Home = () => {
   const [filetedRestarant, setFiletedRestarant] = useState([]);
   const handleSearch = (keyword) => {
     if (keyword === "") {
+      setFiletedRestarant(restaurant);
       return;
     }
     const result = restaurant.filter((restaurant) => {
       return (
-        restaurant.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        restaurant.name.toLowerCase().includes(keyword.toLowerCase()) ||
         restaurant.type.toLowerCase().includes(keyword.toLowerCase())
       );
     });
@@ -20,19 +21,28 @@ const Home = () => {
     console.log("keyword", keyword);
   };
   useEffect(() => {
-    // call api : getAllRestaurants เรียก API
-    fetch("http://localhost:5000/restaurants")
+    // call api : getAllRestaurants
+    fetch("http://localhost:5000/api/v1/restaurant")
       .then((res) => {
-        // convert เเปลงเป็น Json
+        if (!res.ok) throw new Error("Failed to fetch restaurants");
         return res.json();
       })
       .then((response) => {
-        setRestaurants(response);
-        setFiletedRestarant(response);
+        if (Array.isArray(response)) {
+          setRestaurants(response);
+          setFiletedRestarant(response);
+        } else if (response && response.data) {
+          setRestaurants(response.data);
+          setFiletedRestarant(response.data);
+        } else {
+          setRestaurants([]);
+          setFiletedRestarant([]);
+        }
       })
       .catch((err) => {
-        //เช็ค error
         console.log(err.message);
+        setRestaurants([]);
+        setFiletedRestarant([]);
       });
   }, []);
   return (
